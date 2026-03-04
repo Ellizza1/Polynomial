@@ -24,7 +24,6 @@ public class Lagrange extends Polynomial {
         var sum = new Polynomial();
         for(var p: points.entrySet()){
             sum = sum.plus(createFundamental(p.getKey()).times(p.getValue()));
-
         }
         coeffs.clear();
         coeffs.putAll(sum.coeffs);
