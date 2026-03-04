@@ -1,52 +1,85 @@
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PolynomialTest {
 
-    @org.junit.jupiter.api.BeforeEach
+    private Polynomial polynom;
+
+    @BeforeEach
     void setUp() {
+        polynom = new Polynomial(1.5, 2.0, 3.0);
     }
 
-    @org.junit.jupiter.api.Test
-    void copyList() {
+    @Test
+    @DisplayName("copyList: копия независима от оригинала")
+    void copyList_createsIndependentCopy() {
+        Map<Integer, Double> original = polynom.copyList(polynom.coeffs);
+
+        polynom.coeffs.put(0, 999.0);// изменяем оригинал
+
+        assertEquals(1.5, original.get(0), 1e-9,
+                "Копия должна быть независимой от оригинала");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
+    @DisplayName("copyList: возвращает отсортированный TreeMap")
+    void copyList_returnsSortedMap() {
+
+        Map<Integer, Double> copy = polynom.copyList(polynom.coeffs);
+
+        Integer[] expectedKeys = {0, 1, 2};
+        Integer[] actualKeys = copy.keySet().toArray(new Integer[0]);
+
+        assertArrayEquals(expectedKeys, actualKeys,
+                "copyList должен возвращать TreeMap (отсортированный)");
+
+//        assertTrue(copy instanceof TreeMap,
+//                "copyList должен возвращать экземпляр TreeMap");
+    }
+
+    @Test
     void testToString() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testEquals() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testHashCode() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getPower() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void plus() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void minus() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void times() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testTimes() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void div() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void calc() {
     }
 }
