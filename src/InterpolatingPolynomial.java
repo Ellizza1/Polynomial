@@ -18,6 +18,7 @@ public class InterpolatingPolynomial extends Polynomial{
     public InterpolatingPolynomial(){
         this.points = new ArrayList<>();
     }
+
     public InterpolatingPolynomial(Collection<Point> dots){
         this.points = new ArrayList<>(dots);
     }

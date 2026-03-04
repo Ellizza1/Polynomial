@@ -3,7 +3,7 @@ import java.lang.Math;
 import java.lang.Integer;
 
 public class Polynomial {
-    private final Map<Integer, Double> coeffs;
+    protected final Map<Integer, Double> coeffs;
     private static final double EPS = 1e-9;
 
     public Polynomial() {
@@ -124,24 +124,24 @@ public class Polynomial {
         return Collections.max(coeffs.keySet());
     }
 
-    public Map plus(Object obj){
+    public Polynomial plus(Object obj){
         Polynomial other = (Polynomial) obj;
         Map<Integer, Double> result = new HashMap<>(this.coeffs);
         for(Integer degree : other.coeffs.keySet()) {
             // merge: если ключ есть - суммирует, если нет - добавляет новый
             result.merge(degree, other.coeffs.get(degree), Double::sum);
         }
-        return result;
+        return new Polynomial(result);
     }
 
-    public Map minus(Object obj){
+    public Polynomial minus(Object obj){
         Polynomial other = (Polynomial) obj;
         Map<Integer, Double> result = new HashMap<>(this.coeffs);
         for(Integer degree: other.coeffs.keySet()){
             result.merge(degree, other.coeffs.get(degree)  , (a, b) -> a - b);
         }
 
-        return result;
+        return new Polynomial(result);
     }
 
     public Polynomial times(double number) {
@@ -153,6 +153,22 @@ public class Polynomial {
 
         result.correctCoeffs();
 
+        return result;
+    }
+
+    public Polynomial times(Polynomial other) {
+        Polynomial result = new Polynomial();
+
+        for (Map.Entry<Integer, Double> entry1 : this.coeffs.entrySet()) {
+            for (Map.Entry<Integer, Double> entry2 : other.coeffs.entrySet()) {
+                int degree = entry1.getKey() + entry2.getKey();
+                double coeff = entry1.getValue() * entry2.getValue();
+
+                result.coeffs.merge(degree, coeff, Double::sum);
+            }
+        }
+
+        result.correctCoeffs();
         return result;
     }
 
