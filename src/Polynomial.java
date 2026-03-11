@@ -80,6 +80,9 @@ public class Polynomial {
                 sb.append("x^").append(n);
             }
         }
+        if (sb.length() == 0) {
+            return "0";
+        }
         return sb.toString();
     }
 
@@ -90,7 +93,7 @@ public class Polynomial {
 
         Polynomial p = (Polynomial) obj; //приводим объект в тип object
 
-        if((getClass() != obj.getClass()) || (GetPower()!= p.GetPower()) ) return false;
+        if((getClass() != obj.getClass()) || (getPower()!= p.getPower()) ) return false;
         else if(this.coeffs.size() != p.coeffs.size()) return false;
         else {
             for(Integer degree: this.coeffs.keySet()){
@@ -119,9 +122,17 @@ public class Polynomial {
         if(coeffs.isEmpty()) coeffs.put(0, 0.0);
     }
 
-    public int GetPower(){
-        if(coeffs.isEmpty() || (coeffs.size() == 1 && coeffs.get(0) == 0.0)) return 0;
-        return Collections.max(coeffs.keySet());
+
+    public int getPower() {
+        if (coeffs.isEmpty()) return 0;
+
+        // Ищем старший ненулевой коэффициент с конца
+        for (int i = coeffs.size() - 1; i >= 0; i--) {
+            if (coeffs.get(i) != 0.0) {
+                return i;
+            }
+        }
+        return 0; // Все коэффициенты нулевые
     }
 
     public Polynomial plus(Object obj){
@@ -138,7 +149,12 @@ public class Polynomial {
         Polynomial other = (Polynomial) obj;
         Map<Integer, Double> result = new HashMap<>(this.coeffs);
         for(Integer degree: other.coeffs.keySet()){
-            result.merge(degree, other.coeffs.get(degree)  , (a, b) -> a - b);
+            if (result.containsKey(degree)) {
+                result.merge(degree, other.coeffs.get(degree), (a, b) -> a - b);
+            } else {
+                // Если степени нет в этом полиноме, то 0 - other = -other
+                result.put(degree, -other.coeffs.get(degree));
+            }
         }
 
         return new Polynomial(result);
@@ -188,7 +204,7 @@ public class Polynomial {
         return result;
     }
 
-    public double calc(int dot){
+    public double calc(double dot){
         double result = 0.0;
 
         for(Map.Entry<Integer, Double> entry : this.coeffs.entrySet()){
