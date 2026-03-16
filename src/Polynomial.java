@@ -88,19 +88,32 @@ public class Polynomial {
 
 
     @Override
-    public boolean equals(Object obj){
-        if(obj == null) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
 
-        Polynomial p = (Polynomial) obj; //приводим объект в тип object
+        if (obj == null) return false;
 
-        if((getClass() != obj.getClass()) || (getPower()!= p.getPower()) ) return false;
-        else if(this.coeffs.size() != p.coeffs.size()) return false;
-        else {
-            for(Integer degree: this.coeffs.keySet()){
-                if(Math.abs( this.coeffs.get(degree) - p.coeffs.get(degree) ) > EPS) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Polynomial other = (Polynomial) obj;
+
+        if (this.getPower() != other.getPower()) return false;
+
+        if (this.coeffs.size() != other.coeffs.size()) return false;
+
+        for (Map.Entry<Integer, Double> entry : this.coeffs.entrySet()) {
+            Integer degree = entry.getKey();
+            Double thisCoeff = entry.getValue();
+            Double otherCoeff = other.coeffs.get(degree);
+
+            double otherValue = (otherCoeff != null) ? otherCoeff : 0.0;
+
+            if (Math.abs(thisCoeff - otherValue) > EPS) {
+                return false;
             }
-            return true;
         }
+
+        return true;
     }
 
     @Override
@@ -126,13 +139,17 @@ public class Polynomial {
     public int getPower() {
         if (coeffs.isEmpty()) return 0;
 
-        // Ищем старший ненулевой коэффициент с конца
-        for (int i = coeffs.size() - 1; i >= 0; i--) {
-            if (coeffs.get(i) != 0.0) {
-                return i;
+        int maxPower = 0;
+        boolean foundNonZero = false;
+
+        for (Map.Entry<Integer, Double> entry : coeffs.entrySet()) {
+            if (entry.getValue() != 0.0) {
+                maxPower = Math.max(maxPower, entry.getKey());
+                foundNonZero = true;
             }
         }
-        return 0; // Все коэффициенты нулевые
+
+        return foundNonZero ? maxPower : 0;
     }
 
     public Polynomial plus(Object obj){
@@ -204,7 +221,7 @@ public class Polynomial {
         return result;
     }
 
-    public double calc(double dot){
+    public double evaluate(double dot){
         double result = 0.0;
 
         for(Map.Entry<Integer, Double> entry : this.coeffs.entrySet()){

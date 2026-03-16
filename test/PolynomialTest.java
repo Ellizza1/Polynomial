@@ -93,15 +93,15 @@ class PolynomialTest {
 
     @Test
     void getPower() {
-        assertEquals(emptypoly.getPower(), 0);
-        assertEquals(peq1.getPower(),2);
+        assertEquals(emptypoly.getPower(), 0, "пустой полином");
+        assertEquals(peq1.getPower(),2, "полином со степенью 2");
         //assertEquals(polynom.getPower(),2);
 
         Polynomial pwithzeropower = new Polynomial(1.98);
-        assertEquals(pwithzeropower.getPower(), 0, "тут");
+        assertEquals(pwithzeropower.getPower(), 0, "полином с нулевой степенью");
 
         Polynomial pwithonepower = new Polynomial(0, 4.5);
-        assertEquals(pwithonepower.getPower(), 1);
+        assertEquals(1, pwithonepower.getPower());
 
         assertEquals(p5.getPower(),5, "большой полином");
 
@@ -202,8 +202,8 @@ class PolynomialTest {
 
     @Test
     void calc() {
-        assertEquals(25.25, polynom.calc(2.5), "вычисление полинома в точке");
-        assertEquals(0, emptypoly.calc(3), "вычисление пустого полинома ");
-        assertEquals(-64, p3.calc(-5));
+        assertEquals(25.25, polynom.evaluate(2.5), "вычисление полинома в точке");
+        assertEquals(0, emptypoly.evaluate(3), "вычисление пустого полинома ");
+        assertEquals(-64, p3.evaluate(-5));
     }
 }
